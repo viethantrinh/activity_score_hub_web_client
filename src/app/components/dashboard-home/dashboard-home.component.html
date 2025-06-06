@@ -1,0 +1,222 @@
+<div class="dashboard-home">
+    <!-- Welcome Section -->
+    <div class="welcome-section mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="h3 mb-2">Chào mừng đến với Activity Score Hub</h1>
+                <p class="text-muted mb-0">Hệ thống quản lý điểm hoạt động toàn diện cho tổ chức của bạn</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <span class="badge bg-success fs-6 px-3 py-2">
+                    <i class="bi bi-check-circle me-1"></i>
+                    Hệ thống hoạt động bình thường
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="stat-card bg-primary">
+                <div class="stat-card-body">
+                    <div class="stat-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-number">{{ stats.totalUsers }}</h3>
+                        <p class="stat-label">Tổng người dùng</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="stat-card bg-success">
+                <div class="stat-card-body">
+                    <div class="stat-icon">
+                        <i class="bi bi-person-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-number">{{ stats.activeUsers }}</h3>
+                        <p class="stat-label">Người dùng hoạt động</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="stat-card bg-warning">
+                <div class="stat-card-body">
+                    <div class="stat-icon">
+                        <i class="bi bi-activity"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-number">{{ stats.totalActivities }}</h3>
+                        <p class="stat-label">Tổng hoạt động</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="stat-card bg-info">
+                <div class="stat-card-body">
+                    <div class="stat-icon">
+                        <i class="bi bi-trophy"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-number">{{ stats.totalScore }}</h3>
+                        <p class="stat-label">Tổng điểm</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-lightning me-2"></i>
+                        Thao tác nhanh
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a routerLink="/dashboard/users" class="quick-action-card">
+                                <div class="quick-action-icon bg-primary">
+                                    <i class="bi bi-person-plus"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h6>Quản lý người dùng</h6>
+                                    <p class="text-muted mb-0">Thêm, sửa, xóa người dùng</p>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="quick-action-card disabled">
+                                <div class="quick-action-icon bg-success">
+                                    <i class="bi bi-plus-circle"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h6>Tạo hoạt động mới</h6>
+                                    <p class="text-muted mb-0">Thêm hoạt động mới</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="quick-action-card disabled">
+                                <div class="quick-action-icon bg-warning">
+                                    <i class="bi bi-bar-chart"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h6>Báo cáo thống kê</h6>
+                                    <p class="text-muted mb-0">Xem báo cáo chi tiết</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="quick-action-card disabled">
+                                <div class="quick-action-icon bg-info">
+                                    <i class="bi bi-gear"></i>
+                                </div>
+                                <div class="quick-action-content">
+                                    <h6>Cài đặt hệ thống</h6>
+                                    <p class="text-muted mb-0">Cấu hình hệ thống</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-clock-history me-2"></i>
+                        Hoạt động gần đây
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon bg-primary">
+                                <i class="bi bi-person-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6 class="mb-1">Người dùng mới được tạo</h6>
+                                <p class="text-muted mb-0">Nguyễn Văn A đã được thêm vào hệ thống</p>
+                                <small class="text-muted">2 giờ trước</small>
+                            </div>
+                        </div>
+
+                        <div class="activity-item">
+                            <div class="activity-icon bg-success">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6 class="mb-1">Hoạt động được phê duyệt</h6>
+                                <p class="text-muted mb-0">Hoạt động "Hội thảo khoa học" đã được phê duyệt</p>
+                                <small class="text-muted">5 giờ trước</small>
+                            </div>
+                        </div>
+
+                        <div class="activity-item">
+                            <div class="activity-icon bg-warning">
+                                <i class="bi bi-exclamation-triangle"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6 class="mb-1">Cần xét duyệt</h6>
+                                <p class="text-muted mb-0">3 hoạt động mới cần được xét duyệt</p>
+                                <small class="text-muted">1 ngày trước</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Thông tin hệ thống
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="system-info">
+                        <div class="info-item">
+                            <span class="info-label">Phiên bản:</span>
+                            <span class="info-value">v1.0.0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Cập nhật cuối:</span>
+                            <span class="info-value">06/06/2025</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Trạng thái:</span>
+                            <span class="badge bg-success">Hoạt động</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Uptime:</span>
+                            <span class="info-value">99.9%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

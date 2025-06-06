@@ -1,0 +1,189 @@
+<div class="auth-container">
+    <div class="row g-0">
+        <!-- Left side - Branding -->
+        <div class="col-md-6 auth-brand-side">
+            <div class="text-white p-5">
+                <div class="text-center">
+                    <h1 class="display-4 fw-bold mb-4">Activity Score Hub</h1>
+                    <p class="lead mb-5">Hệ thống quản lý điểm hoạt động toàn diện</p>
+
+                    <!-- Feature highlights -->
+                    <div class="feature-list text-start">
+                        <div class="feature-item mb-3">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <span>Quản lý người dùng hiệu quả</span>
+                        </div>
+                        <div class="feature-item mb-3">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <span>Theo dõi hoạt động chi tiết</span>
+                        </div>
+                        <div class="feature-item mb-3">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <span>Báo cáo thống kê trực quan</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- Right side - Forms -->
+        <div class="col-md-6 auth-form-side">
+            <div class="p-5">
+                <div class="auth-form-container">
+                    <!-- Mode Toggle -->
+                    <div class="text-center mb-4">
+                        <h2 class="h3 mb-3">{{ isLoginMode ? 'Đăng nhập' : 'Đăng ký' }}</h2>
+                        <p class="text-muted">
+                            {{ isLoginMode ? 'Chào mừng trở lại!' : 'Tạo tài khoản mới' }}
+                        </p>
+                    </div>
+
+                    <!-- Error Alert -->
+                    <div *ngIf="error" class="alert alert-danger" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        {{ error }}
+                    </div>
+
+                    <!-- Login Form -->
+                    <form *ngIf="isLoginMode" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control"
+                                [class.is-invalid]="isFieldInvalid(loginForm, 'email')" id="loginEmail"
+                                formControlName="email" placeholder="Nhập email của bạn">
+                            <div *ngIf="isFieldInvalid(loginForm, 'email')" class="invalid-feedback">
+                                {{ getFieldError(loginForm, 'email') }}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="loginPassword" class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control"
+                                [class.is-invalid]="isFieldInvalid(loginForm, 'password')" id="loginPassword"
+                                formControlName="password" placeholder="Nhập mật khẩu">
+                            <div *ngIf="isFieldInvalid(loginForm, 'password')" class="invalid-feedback">
+                                {{ getFieldError(loginForm, 'password') }}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="loading">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                            {{ loading ? 'Đang đăng nhập...' : 'Đăng nhập' }}
+                        </button>
+                    </form> <!-- Register Form -->
+                    <form *ngIf="!isLoginMode" [formGroup]="registerForm" (ngSubmit)="onRegister()">
+                        <div class="row g-2">
+                            <div class="col-md-6 mb-3">
+                                <label for="username" class="form-label">Tên đăng nhập</label>
+                                <input type="text" class="form-control"
+                                    [class.is-invalid]="isFieldInvalid(registerForm, 'username')" id="username"
+                                    formControlName="username" placeholder="Tên đăng nhập">
+                                <div *ngIf="isFieldInvalid(registerForm, 'username')" class="invalid-feedback">
+                                    {{ getFieldError(registerForm, 'username') }}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Họ và tên</label>
+                                <input type="text" class="form-control"
+                                    [class.is-invalid]="isFieldInvalid(registerForm, 'name')" id="name"
+                                    formControlName="name" placeholder="Họ và tên">
+                                <div *ngIf="isFieldInvalid(registerForm, 'name')" class="invalid-feedback">
+                                    {{ getFieldError(registerForm, 'name') }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email cá nhân</label>
+                                <input type="email" class="form-control"
+                                    [class.is-invalid]="isFieldInvalid(registerForm, 'email')" id="email"
+                                    formControlName="email" placeholder="Email cá nhân">
+                                <div *ngIf="isFieldInvalid(registerForm, 'email')" class="invalid-feedback">
+                                    {{ getFieldError(registerForm, 'email') }}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="workEmail" class="form-label">Email công việc</label>
+                                <input type="email" class="form-control"
+                                    [class.is-invalid]="isFieldInvalid(registerForm, 'workEmail')" id="workEmail"
+                                    formControlName="workEmail" placeholder="Email công việc">
+                                <div *ngIf="isFieldInvalid(registerForm, 'workEmail')" class="invalid-feedback">
+                                    {{ getFieldError(registerForm, 'workEmail') }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control"
+                                [class.is-invalid]="isFieldInvalid(registerForm, 'password')" id="password"
+                                formControlName="password" placeholder="Mật khẩu">
+                            <div *ngIf="isFieldInvalid(registerForm, 'password')" class="invalid-feedback">
+                                {{ getFieldError(registerForm, 'password') }}
+                            </div>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="col-md-6 mb-3">
+                                <label for="unit" class="form-label">Đơn vị</label>
+                                <input type="text" class="form-control"
+                                    [class.is-invalid]="isFieldInvalid(registerForm, 'unit')" id="unit"
+                                    formControlName="unit" placeholder="Đơn vị công tác">
+                                <div *ngIf="isFieldInvalid(registerForm, 'unit')" class="invalid-feedback">
+                                    {{ getFieldError(registerForm, 'unit') }}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="phoneNumber" class="form-label">Số điện thoại</label>
+                                <input type="tel" class="form-control"
+                                    [class.is-invalid]="isFieldInvalid(registerForm, 'phoneNumber')" id="phoneNumber"
+                                    formControlName="phoneNumber" placeholder="Số điện thoại">
+                                <div *ngIf="isFieldInvalid(registerForm, 'phoneNumber')" class="invalid-feedback">
+                                    {{ getFieldError(registerForm, 'phoneNumber') }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="col-md-6 mb-3">
+                                <label for="academicRank" class="form-label">Học hàm</label>
+                                <input type="text" class="form-control" id="academicRank" formControlName="academicRank"
+                                    placeholder="Học hàm (tùy chọn)">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="degree" class="form-label">Học vị</label>
+                                <input type="text" class="form-control" id="degree" formControlName="degree"
+                                    placeholder="Học vị (tùy chọn)">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Ghi chú</label>
+                            <textarea class="form-control" id="notes" formControlName="notes" rows="2"
+                                placeholder="Ghi chú (tùy chọn)"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="loading">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                            {{ loading ? 'Đang đăng ký...' : 'Đăng ký' }}
+                        </button>
+                    </form>
+
+                    <!-- Toggle Mode Link -->
+                    <div class="text-center">
+                        <p class="mb-0">
+                            {{ isLoginMode ? 'Chưa có tài khoản?' : 'Đã có tài khoản?' }}
+                            <a href="#" class="text-decoration-none ms-1"
+                                (click)="toggleMode(); $event.preventDefault()">
+                                {{ isLoginMode ? 'Đăng ký ngay' : 'Đăng nhập' }}
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

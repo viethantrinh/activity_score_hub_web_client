@@ -1,0 +1,198 @@
+<div class="user-management">
+    <!-- Page Header -->
+    <div class="page-header mb-4">
+        <div class="row align-items-center">
+            <div class="col">
+                <h2 class="page-title">
+                    <i class="bi bi-people me-2"></i>
+                    Quản lý người dùng
+                </h2>
+                <p class="text-muted mb-0">Quản lý thông tin người dùng trong hệ thống</p>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-primary" (click)="openCreateUserModal()">
+                    <i class="bi bi-person-plus me-2"></i>
+                    Thêm người dùng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Tìm kiếm</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" class="form-control" placeholder="Tìm theo tên, email, username..."
+                            [(ngModel)]="searchTerm" (input)="onSearch()">
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Vai trò</label>
+                    <select class="form-select" [(ngModel)]="filterRole" (change)="onFilterChange()">
+                        <option value="">Tất cả vai trò</option>
+                        <option value="ADMIN">Quản trị viên</option>
+                        <option value="USER">Người dùng</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Đơn vị</label>
+                    <input type="text" class="form-control" placeholder="Lọc theo đơn vị" [(ngModel)]="filterUnit"
+                        (input)="onFilterChange()">
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">&nbsp;</label>
+                    <button class="btn btn-outline-secondary w-100" (click)="clearFilters()">
+                        <i class="bi bi-arrow-clockwise me-1"></i>
+                        Xóa bộ lọc
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Alert -->
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ error }}
+    </div>
+
+    <!-- Users Table -->
+    <div class="card">
+        <div class="card-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h5 class="card-title mb-0">
+                        Danh sách người dùng
+                        <span class="badge bg-secondary ms-2">{{ filteredUsers.length }}</span>
+                    </h5>
+                </div>
+                <div class="col-auto" *ngIf="loading">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                        <span class="visually-hidden">Đang tải...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên đăng nhập</th>
+                            <th>Họ và tên</th>
+                            <th>Email</th>
+                            <th>Đơn vị</th>
+                            <th>Vai trò</th>
+                            <th>Điện thoại</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="loading">
+                            <td colspan="8" class="text-center py-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Đang tải...</span>
+                                </div>
+                                <p class="text-muted mt-2 mb-0">Đang tải dữ liệu...</p>
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="!loading && filteredUsers.length === 0">
+                            <td colspan="8" class="text-center py-4">
+                                <i class="bi bi-inbox text-muted" style="font-size: 2rem;"></i>
+                                <p class="text-muted mt-2 mb-0">Không có dữ liệu</p>
+                            </td>
+                        </tr>
+
+                        <tr *ngFor="let user of paginatedUsers; let i = index">
+                            <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+                            <td>
+                                <strong>{{ user.username }}</strong>
+                            </td>
+                            <td>{{ user.name }}</td>
+                            <td>
+                                <div>{{ user.email }}</div>
+                                <small class="text-muted" *ngIf="user.workEmail !== user.email">
+                                    Work: {{ user.workEmail }}
+                                </small>
+                            </td>
+                            <td>{{ user.unit }}</td>
+                            <td>
+                                <span class="badge" [class]="getRoleBadgeClass(user.systemRoles)">
+                                    {{ getRoleDisplayText(user.systemRoles) }}
+                                </span>
+                            </td>
+                            <td>{{ user.phoneNumber }}</td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button class="btn btn-outline-primary" (click)="openEditUserModal(user)"
+                                        title="Chỉnh sửa">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-outline-danger" (click)="deleteUser(user)" title="Xóa">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="card-footer" *ngIf="totalPages > 1">
+            <div class="row align-items-center">
+                <div class="col">
+                    <p class="text-muted mb-0">
+                        Hiển thị {{ (currentPage - 1) * itemsPerPage + 1 }} -
+                        {{ Math.min(currentPage * itemsPerPage, filteredUsers.length) }}
+                        trong tổng {{ filteredUsers.length }} bản ghi
+                    </p>
+                </div>
+                <div class="col-auto">
+                    <nav>
+                        <ul class="pagination mb-0">
+                            <li class="page-item" [class.disabled]="currentPage === 1">
+                                <a class="page-link" href="#"
+                                    (click)="changePage(currentPage - 1); $event.preventDefault()">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+
+                            <li *ngFor="let page of pageNumbers" class="page-item"
+                                [class.active]="page === currentPage">
+                                <a class="page-link" href="#" (click)="changePage(page); $event.preventDefault()">
+                                    {{ page }}
+                                </a>
+                            </li>
+
+                            <li class="page-item" [class.disabled]="currentPage === totalPages">
+                                <a class="page-link" href="#"
+                                    (click)="changePage(currentPage + 1); $event.preventDefault()">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User Modal -->
+<app-user-modal *ngIf="showUserModal" [user]="selectedUser" [isEditMode]="isEditMode" (userSaved)="onUserSaved()"
+    (modalClosed)="closeUserModal()">
+</app-user-modal>
