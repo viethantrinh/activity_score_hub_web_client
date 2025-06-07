@@ -1,0 +1,174 @@
+<!-- User Assignment Modal -->
+<div class="modal-backdrop" *ngIf="isVisible" (click)="onModalBackdropClick($event)">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-people me-2"></i>
+                    Gán người dùng cho hoạt động: {{ activity?.name }}
+                </h5>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div *ngIf="loading" class="text-center py-4">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Đang tải...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Đang tải dữ liệu...</p>
+                </div>
+
+                <div *ngIf="!loading">
+                    <!-- Activity Info -->
+                    <div class="alert alert-info mb-4">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6 class="alert-heading mb-2">{{ activity?.name }}</h6>
+                                <p class="mb-1">{{ activity?.description }}</p>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar-range me-1"></i>
+                                    {{ activity?.startDate | date:'dd/MM/yyyy' }} - {{ activity?.endDate |
+                                    date:'dd/MM/yyyy' }}
+                                </small>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <div class="badge bg-primary">{{ availableRoles.length }} vai trò có sẵn</div>
+                                <br>
+                                <div class="badge bg-success mt-1">{{ currentParticipants.length }} người tham gia</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Available Roles Info -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="bi bi-award me-2"></i>
+                                Các vai trò có thể gán
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6" *ngFor="let roleResp of availableRoles">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span>
+                                            <strong>{{ roleResp.role.name }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ roleResp.role.description }}</small>
+                                        </span>
+                                        <span class="badge bg-info">{{ roleResp.score }} điểm</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Assignment Form -->
+                    <form [formGroup]="assignmentForm" (ngSubmit)="onSubmit()">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">
+                                    <i class="bi bi-person-plus me-2"></i>
+                                    Gán người dùng và vai trò
+                                </h6>
+                                <button type="button" class="btn btn-sm btn-outline-primary"
+                                    (click)="addNewAssignment()">
+                                    <i class="bi bi-plus"></i> Thêm người
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 35%">Người dùng</th>
+                                                <th style="width: 25%">Vai trò</th>
+                                                <th style="width: 10%">Điểm</th>
+                                                <th style="width: 25%">Ghi chú</th>
+                                                <th style="width: 5%"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody formArrayName="assignments">
+                                            <tr *ngFor="let assignment of assignmentsFormArray.controls; let i = index"
+                                                [formGroupName]="i">
+                                                <!-- User Selection -->
+                                                <td>
+                                                    <select class="form-select form-select-sm" formControlName="userId"
+                                                        [class.is-invalid]="assignment.get('userId')?.invalid && assignment.get('userId')?.touched">
+                                                        <option value="">-- Chọn người dùng --</option>
+                                                        <option *ngFor="let user of availableUsers" [value]="user.id">
+                                                            {{ user.name }} ({{ user.username }})
+                                                        </option>
+                                                    </select>
+                                                    <div *ngIf="assignment.get('userId')?.value && isUserAlreadyAssigned(assignment.get('userId')?.value, i)"
+                                                        class="text-danger small mt-1">
+                                                        <i class="bi bi-exclamation-triangle me-1"></i>
+                                                        Người dùng đã được gán
+                                                    </div>
+                                                </td>
+
+                                                <!-- Role Selection -->
+                                                <td>
+                                                    <select class="form-select form-select-sm" formControlName="roleId"
+                                                        [class.is-invalid]="assignment.get('roleId')?.invalid && assignment.get('roleId')?.touched">
+                                                        <option value="">-- Chọn vai trò --</option>
+                                                        <option *ngFor="let roleResp of availableRoles"
+                                                            [value]="roleResp.role.id">
+                                                            {{ roleResp.role.name }}
+                                                        </option>
+                                                    </select>
+                                                </td>
+
+                                                <!-- Score Display -->
+                                                <td>
+                                                    <span *ngIf="assignment.get('roleId')?.value" class="badge bg-info">
+                                                        {{ getRoleScore(assignment.get('roleId')?.value) }}
+                                                    </span>
+                                                </td>
+
+                                                <!-- Notes -->
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        formControlName="notes" placeholder="Ghi chú...">
+                                                </td>
+
+                                                <!-- Remove Button -->
+                                                <td>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                                        (click)="removeAssignment(i)"
+                                                        [disabled]="assignmentsFormArray.length <= 1" title="Xóa">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- No assignments message -->
+                                <div *ngIf="assignmentsFormArray.length === 0" class="text-center py-4 text-muted">
+                                    <i class="bi bi-person-x h2"></i>
+                                    <p>Chưa có người nào được gán. Nhấn "Thêm người" để bắt đầu.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModal()" [disabled]="submitting">
+                    Hủy
+                </button>
+                <button type="button" class="btn btn-primary" (click)="onSubmit()"
+                    [disabled]="assignmentForm.invalid || submitting || loading">
+                    <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2"></span>
+                    {{ submitting ? 'Đang lưu...' : 'Lưu thay đổi' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

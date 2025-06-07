@@ -116,6 +116,11 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group btn-group-sm" role="group">
+                                    <button class="btn btn-outline-success btn-sm"
+                                        (click)="openUserAssignmentModal(activity)" title="Gán người dùng">
+                                        <i class="bi bi-people"></i>
+                                        <span class="d-none d-lg-inline ms-1">Gán người dùng</span>
+                                    </button>
                                     <button class="btn btn-outline-primary btn-sm"
                                         (click)="openEditActivityModal(activity)" title="Chỉnh sửa">
                                         <i class="bi bi-pencil"></i>
@@ -191,3 +196,8 @@
 <app-activity-modal *ngIf="showActivityModal" [activity]="selectedActivity" [isEditMode]="isEditMode"
     (activitySaved)="onActivitySaved()" (modalClosed)="closeActivityModal()">
 </app-activity-modal>
+
+<!-- User Assignment Modal -->
+<app-user-assignment-modal [isVisible]="showUserAssignmentModal" [activity]="selectedActivity"
+    (visibleChange)="showUserAssignmentModal = $event" (assignmentUpdated)="onUserAssignmentUpdated()">
+</app-user-assignment-modal>

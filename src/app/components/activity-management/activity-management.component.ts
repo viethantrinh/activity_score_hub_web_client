@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Activity, ActivityListItem } from '../../models/activity.model';
 import { ActivityService } from '../../services/activity.service';
 import { ActivityModalComponent } from '../activity-modal/activity-modal.component';
+import { UserAssignmentModalComponent } from '../user-assignment-modal/user-assignment-modal.component';
 
 @Component({
     selector: 'app-activity-management',
     standalone: true,
-    imports: [CommonModule, FormsModule, ActivityModalComponent],
+    imports: [CommonModule, FormsModule, ActivityModalComponent, UserAssignmentModalComponent],
     templateUrl: './activity-management.component.html',
     styleUrls: ['./activity-management.component.css']
 })
@@ -17,6 +18,7 @@ export class ActivityManagementComponent implements OnInit {
     filteredActivities: ActivityListItem[] = [];
     selectedActivity: Activity | null = null;
     showActivityModal = false;
+    showUserAssignmentModal = false;
     isEditMode = false;
     loading = false;
     Math = Math;
@@ -151,6 +153,26 @@ export class ActivityManagementComponent implements OnInit {
                 }
             });
         }
+    }
+
+    openUserAssignmentModal(activity: ActivityListItem): void {
+        // Convert ActivityListItem to Activity for the modal
+        this.selectedActivity = {
+            id: activity.id,
+            name: activity.name,
+            description: activity.description,
+            startDate: activity.startDate,
+            endDate: activity.endDate,
+            roles: [] // Will be loaded in the modal
+        };
+        this.showUserAssignmentModal = true;
+    }
+
+    onUserAssignmentUpdated(): void {
+        this.showUserAssignmentModal = false;
+        this.selectedActivity = null;
+        // Optionally reload activities to update participant counts
+        this.loadActivities();
     }
 
     changePage(page: number): void {
