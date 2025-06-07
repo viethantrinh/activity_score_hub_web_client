@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import {
     ApiResponse,
     AuthResponse,
@@ -9,7 +9,8 @@ import {
     IntrospectTokenRequest,
     SignInRequest,
     SignOutRequest,
-    SignUpRequest
+    SignUpRequest,
+    User
 } from '../models/user.model';
 
 @Injectable({
@@ -18,7 +19,7 @@ import {
 export class AuthService {
     private baseUrl = 'http://localhost:8080/auth';
     private tokenKey = 'auth_token';
-    private currentUserSubject = new BehaviorSubject<any>(null);
+    private currentUserSubject = new BehaviorSubject<User | null>(null);
     public currentUser$ = this.currentUserSubject.asObservable();
 
     constructor(private http: HttpClient) {
@@ -31,6 +32,7 @@ export class AuthService {
                 map(response => response.result),
                 tap(result => {
                     this.storeToken(result.token);
+                    this.loadCurrentUser();
                 })
             );
     }
@@ -41,6 +43,7 @@ export class AuthService {
                 map(response => response.result),
                 tap(result => {
                     this.storeToken(result.token);
+                    this.loadCurrentUser();
                 })
             );
     }
@@ -49,7 +52,7 @@ export class AuthService {
         const token = this.getToken();
         if (!token) {
             this.clearToken();
-            return new Observable(observer => observer.next(null));
+            return of(null);
         }
 
         const request: SignOutRequest = { token };
@@ -57,6 +60,10 @@ export class AuthService {
             .pipe(
                 tap(() => {
                     this.clearToken();
+                }),
+                catchError(() => {
+                    this.clearToken();
+                    return of(null);
                 })
             );
     }
@@ -64,10 +71,7 @@ export class AuthService {
     introspectToken(token?: string): Observable<boolean> {
         const tokenToCheck = token || this.getToken();
         if (!tokenToCheck) {
-            return new Observable(observer => {
-                observer.next(false);
-                observer.complete();
-            });
+            return of(false);
         }
 
         const request: IntrospectTokenRequest = { token: tokenToCheck };
@@ -78,13 +82,16 @@ export class AuthService {
                     if (!valid) {
                         this.clearToken();
                     }
+                }),
+                catchError(() => {
+                    this.clearToken();
+                    return of(false);
                 })
             );
     }
 
     private storeToken(token: string): void {
         localStorage.setItem(this.tokenKey, token);
-        this.currentUserSubject.next({ token });
     }
 
     private clearToken(): void {
@@ -105,7 +112,7 @@ export class AuthService {
         if (token) {
             this.introspectToken(token).subscribe(valid => {
                 if (valid) {
-                    this.currentUserSubject.next({ token });
+                    this.loadCurrentUser();
                 }
             });
         }
@@ -117,5 +124,42 @@ export class AuthService {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         });
+    }
+
+    getCurrentUser(): Observable<User> {
+        return this.http.get<ApiResponse<User>>(`${this.baseUrl}/profile`, {
+            headers: this.getAuthHeaders()
+        }).pipe(
+            map(response => response.result),
+            tap(user => {
+                this.currentUserSubject.next(user);
+            }),
+            catchError(error => {
+                console.error('Error getting current user:', error);
+                this.clearToken();
+                return of(null as any);
+            })
+        );
+    }
+
+    hasRole(role: string): Observable<boolean> {
+        if (this.currentUserSubject.value) {
+            return of(this.currentUserSubject.value.systemRoles.includes(role));
+        }
+
+        return this.getCurrentUser().pipe(
+            map(user => user?.systemRoles?.includes(role) || false),
+            catchError(() => of(false))
+        );
+    }
+
+    isAdmin(): Observable<boolean> {
+        return this.hasRole('ADMIN');
+    }
+
+    private loadCurrentUser(): void {
+        if (this.getToken()) {
+            this.getCurrentUser().subscribe();
+        }
     }
 }

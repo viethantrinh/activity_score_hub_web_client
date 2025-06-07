@@ -17,10 +17,16 @@
                         <span *ngIf="!sidebarCollapsed">Trang chủ</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" *ngIf="isAdmin() | async">
                     <a routerLink="/dashboard/users" routerLinkActive="active" class="nav-link">
                         <i class="bi bi-people"></i>
                         <span *ngIf="!sidebarCollapsed">Quản lý người dùng</span>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="isAdmin() | async">
+                    <a routerLink="/dashboard/activities" routerLinkActive="active" class="nav-link">
+                        <i class="bi bi-calendar-event"></i>
+                        <span *ngIf="!sidebarCollapsed">Quản lý hoạt động</span>
                     </a>
                 </li>
                 <!-- Thêm các menu khác ở đây -->

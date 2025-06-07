@@ -1,0 +1,132 @@
+<div class="modal-backdrop" (click)="onCancel()">
+    <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-calendar-event me-2"></i>
+                    {{ isEditMode ? 'Chỉnh sửa hoạt động' : 'Thêm hoạt động mới' }}
+                </h5>
+                <button type="button" class="btn-close" (click)="onCancel()"></button>
+            </div>
+
+            <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <!-- Name -->
+                        <div class="col-12">
+                            <label class="form-label">Tên hoạt động <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" formControlName="name"
+                                [class.is-invalid]="isFieldInvalid('name')" placeholder="Nhập tên hoạt động">
+                            <div class="invalid-feedback" *ngIf="isFieldInvalid('name')">
+                                {{ getFieldError('name') }}
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12">
+                            <label class="form-label">Mô tả <span class="text-danger">*</span></label>
+                            <textarea class="form-control" formControlName="description" rows="3"
+                                [class.is-invalid]="isFieldInvalid('description')"
+                                placeholder="Nhập mô tả hoạt động"></textarea>
+                            <div class="invalid-feedback" *ngIf="isFieldInvalid('description')">
+                                {{ getFieldError('description') }}
+                            </div>
+                        </div>
+
+                        <!-- Start Date & End Date -->
+                        <div class="col-md-6">
+                            <label class="form-label">Ngày bắt đầu <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" formControlName="startDate"
+                                [class.is-invalid]="isFieldInvalid('startDate')">
+                            <div class="invalid-feedback" *ngIf="isFieldInvalid('startDate')">
+                                {{ getFieldError('startDate') }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Ngày kết thúc <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" formControlName="endDate"
+                                [class.is-invalid]="isFieldInvalid('endDate')">
+                            <div class="invalid-feedback" *ngIf="isFieldInvalid('endDate')">
+                                {{ getFieldError('endDate') }}
+                            </div>
+                        </div>
+
+                        <!-- Activity Roles -->
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <label class="form-label mb-0">Vai trò và điểm số <span
+                                        class="text-danger">*</span></label>
+                                <button type="button" class="btn btn-outline-primary btn-sm"
+                                    (click)="addActivityRole()">
+                                    <i class="bi bi-plus-circle me-1"></i>
+                                    Thêm vai trò
+                                </button>
+                            </div>
+
+                            <div formArrayName="roles">
+                                <div *ngFor="let roleForm of activityRoles.controls; let i = index" [formGroupName]="i"
+                                    class="card mb-3">
+                                    <div class="card-body">
+                                        <div class="row g-3">
+                                            <div class="col-md-8">
+                                                <label class="form-label">Vai trò <span
+                                                        class="text-danger">*</span></label>
+                                                <select class="form-select" formControlName="roleId"
+                                                    [class.is-invalid]="isActivityRoleFieldInvalid(i, 'roleId')">
+                                                    <option value="">Chọn vai trò</option>
+                                                    <option *ngFor="let role of roles" [value]="role.id">
+                                                        {{ role.name }}
+                                                    </option>
+                                                </select>
+                                                <div class="invalid-feedback"
+                                                    *ngIf="isActivityRoleFieldInvalid(i, 'roleId')">
+                                                    {{ getActivityRoleFieldError(i, 'roleId') }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label class="form-label">Điểm số <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="number" class="form-control" formControlName="score"
+                                                    [class.is-invalid]="isActivityRoleFieldInvalid(i, 'score')"
+                                                    placeholder="0" min="0">
+                                                <div class="invalid-feedback"
+                                                    *ngIf="isActivityRoleFieldInvalid(i, 'score')">
+                                                    {{ getActivityRoleFieldError(i, 'score') }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-1 d-flex align-items-end">
+                                                <button type="button" class="btn btn-outline-danger btn-sm w-100"
+                                                    (click)="removeActivityRole(i)"
+                                                    [disabled]="activityRoles.length === 1" title="Xóa vai trò">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-muted small" *ngIf="activityRoles.length === 0">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Vui lòng thêm ít nhất một vai trò cho hoạt động
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" (click)="onCancel()" [disabled]="saving">
+                        Hủy
+                    </button>
+                    <button type="submit" class="btn btn-primary" [disabled]="saving || activityForm.invalid">
+                        <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+                        {{ isEditMode ? 'Cập nhật' : 'Tạo mới' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

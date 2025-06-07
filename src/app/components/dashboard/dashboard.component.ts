@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -32,6 +33,10 @@ export class DashboardComponent implements OnInit {
 
     toggleSidebar(): void {
         this.sidebarCollapsed = !this.sidebarCollapsed;
+    }
+
+    isAdmin(): Observable<boolean> {
+        return this.authService.hasRole('ADMIN');
     }
 
     logout(): void {
