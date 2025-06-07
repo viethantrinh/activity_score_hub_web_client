@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
@@ -13,14 +13,30 @@ import { AuthService } from '../../services/auth.service';
 })
 export class DashboardComponent implements OnInit {
     sidebarCollapsed = false;
+    mobileMenuOpen = false;
+    isMobile = false;
 
     constructor(
         private authService: AuthService,
         private router: Router
-    ) { }
+    ) {
+        this.checkScreenSize();
+    }
 
     ngOnInit(): void {
         this.checkAuthentication();
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+        this.checkScreenSize();
+    }
+
+    private checkScreenSize(): void {
+        this.isMobile = window.innerWidth <= 768;
+        if (!this.isMobile) {
+            this.mobileMenuOpen = false;
+        }
     }
 
     private checkAuthentication(): void {
@@ -32,7 +48,21 @@ export class DashboardComponent implements OnInit {
     }
 
     toggleSidebar(): void {
-        this.sidebarCollapsed = !this.sidebarCollapsed;
+        if (this.isMobile) {
+            this.mobileMenuOpen = !this.mobileMenuOpen;
+        } else {
+            this.sidebarCollapsed = !this.sidebarCollapsed;
+        }
+    }
+
+    closeMobileMenu(): void {
+        this.mobileMenuOpen = false;
+    }
+
+    onNavClick(): void {
+        if (this.isMobile) {
+            this.closeMobileMenu();
+        }
     }
 
     isAdmin(): Observable<boolean> {

@@ -119,7 +119,8 @@
     border-radius: 8px;
     padding: 0.75rem 1rem;
     transition: all 0.3s ease;
-    font-size: 0.95rem;
+    font-size: 16px;
+    /* Prevent iOS zoom */
 }
 
 .form-control:focus,
@@ -238,24 +239,34 @@
     .modal-footer {
         padding: 1.25rem;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.75rem;
     }
 
     .modal-footer .btn {
         width: 100%;
         margin: 0;
+        min-height: 44px;
+        /* Touch target */
+        justify-content: center;
     }
 
-    .form-control {
-        padding: 0.675rem 0.875rem;
-        font-size: 0.9rem;
+    .form-control,
+    .form-select {
+        padding: 0.75rem;
+        min-height: 44px;
+        /* Touch target */
+    }
+
+    /* Stack form fields on mobile */
+    .row .col-md-6 {
+        margin-bottom: 1rem;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
     .modal-dialog {
         width: 100%;
-        height: 100%;
+        height: 100vh;
         max-height: 100vh;
         margin: 0;
         border-radius: 0;
@@ -268,10 +279,78 @@
         flex-direction: column;
     }
 
+    .modal-header {
+        padding: 1rem;
+        flex-shrink: 0;
+    }
+
+    .modal-title {
+        font-size: 1rem;
+    }
+
     .modal-body {
         flex: 1;
         max-height: none;
         overflow-y: auto;
+        padding: 1rem;
+    }
+
+    .modal-footer {
+        padding: 1rem;
+        flex-shrink: 0;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .form-control,
+    .form-select,
+    textarea.form-control {
+        font-size: 16px;
+        /* Prevent iOS zoom */
+        padding: 0.75rem;
+        border-radius: 6px;
+    }
+
+    .btn {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border-radius: 6px;
+    }
+
+    /* Adjust form spacing */
+    .mb-3 {
+        margin-bottom: 1.25rem !important;
+    }
+
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .row>[class*="col-"] {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .btn:hover:not(:disabled) {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .btn {
+        min-height: 44px;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 44px;
+    }
+
+    .btn-close {
+        min-width: 44px;
+        min-height: 44px;
     }
 }
 

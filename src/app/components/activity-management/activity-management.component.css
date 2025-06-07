@@ -79,14 +79,26 @@
 
     .page-header {
         text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .page-header .row {
+        flex-direction: column;
+        gap: 1rem;
     }
 
     .page-header .col-auto {
-        margin-top: 1rem;
+        margin-top: 0;
     }
 
     .table-responsive {
         font-size: 0.875rem;
+        margin: 0 -0.5rem;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.5rem 0.25rem;
     }
 
     .btn-group-sm .btn {
@@ -96,5 +108,70 @@
 
     .badge {
         font-size: 0.625rem;
+        padding: 0.125rem 0.25rem;
+    }
+
+    /* Hide less important columns on mobile */
+    .table .d-none-mobile {
+        display: none !important;
+    }
+
+    /* Stack filter controls vertically */
+    .card-body .row>.col-md-4,
+    .card-body .row>.col-md-6,
+    .card-body .row>.col-md-2 {
+        margin-bottom: 1rem;
+    }
+
+    /* Full width buttons */
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-header .btn {
+        width: auto;
+        margin-bottom: 0;
+    }
+
+    /* Pagination adjustments */
+    .pagination-container {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .pagination-sm .page-link {
+        padding: 0.125rem 0.25rem;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .activity-management {
+        padding: 0.25rem;
+    }
+
+    .card {
+        margin: 0 -0.25rem;
+        border-radius: 0;
+    }
+
+    .table-responsive {
+        margin: 0 -0.25rem;
+    }
+
+    .page-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .page-header p {
+        font-size: 0.875rem;
+    }
+
+    /* Very compact table for small screens */
+    .table-sm th,
+    .table-sm td {
+        padding: 0.25rem;
+        font-size: 0.75rem;
     }
 }

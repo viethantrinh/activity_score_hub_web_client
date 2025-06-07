@@ -260,26 +260,83 @@
 
 @media (max-width: 576px) {
     .modal-backdrop {
-        padding: 0.5rem;
+        padding: 0.25rem;
     }
 
     .modal-dialog {
         max-width: 100%;
         margin: 0;
+        height: 100vh;
+        max-height: 100vh;
+    }
+
+    .modal-content {
+        height: 100%;
+        border-radius: 0;
     }
 
     .modal-header,
     .modal-body,
     .modal-footer {
-        padding: 1rem;
+        padding: 0.75rem;
     }
 
     .modal-title {
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
 
     .form-control,
     .form-select {
-        font-size: 0.9rem;
+        font-size: 16px;
+        /* Prevent zoom on iOS */
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .modal-footer .btn {
+        margin-bottom: 0;
+    }
+
+    /* Stack date inputs vertically on very small screens */
+    .col-md-6 {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .modal-dialog {
+        max-width: 95%;
+        margin: 1rem auto;
+    }
+
+    .modal-header {
+        padding: 1rem 0.75rem;
+    }
+
+    .modal-body {
+        padding: 0.75rem;
+    }
+
+    .modal-footer {
+        padding: 0.75rem;
+        flex-direction: column-reverse;
+    }
+
+    .modal-footer .btn {
+        width: 100%;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .modal-footer .btn:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Stack date inputs on tablets */
+    .row .col-md-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
     }
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
@@ -22,6 +22,9 @@ export class UserManagementComponent implements OnInit {
     showUserModal = false;
     isEditMode = false;
 
+    // Responsive
+    isMobile = false;
+
     // Pagination
     currentPage = 1;
     itemsPerPage = 10;
@@ -34,7 +37,23 @@ export class UserManagementComponent implements OnInit {
     filterRole = '';
     filterUnit = '';
 
-    constructor(private userService: UserService) { }
+    constructor(private userService: UserService) {
+        this.checkScreenSize();
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any): void {
+        this.checkScreenSize();
+    }
+
+    private checkScreenSize(): void {
+        this.isMobile = window.innerWidth <= 768;
+        // Adjust items per page for mobile
+        this.itemsPerPage = this.isMobile ? 5 : 10;
+        if (this.filteredUsers.length > 0) {
+            this.calculatePagination();
+        }
+    }
 
     ngOnInit(): void {
         this.loadUsers();

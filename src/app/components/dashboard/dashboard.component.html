@@ -1,6 +1,9 @@
 <div class="dashboard-container">
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" [class.show]="mobileMenuOpen" (click)="closeMobileMenu()"></div>
+
     <!-- Sidebar -->
-    <nav class="sidebar" [class.collapsed]="sidebarCollapsed">
+    <nav class="sidebar" [class.collapsed]="sidebarCollapsed" [class.show]="mobileMenuOpen">
         <div class="sidebar-header">
             <div class="sidebar-brand">
                 <i class="bi bi-speedometer2 me-2"></i>
@@ -12,19 +15,20 @@
             <ul class="sidebar-nav">
                 <li class="nav-item">
                     <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-                        class="nav-link">
+                        class="nav-link" (click)="onNavClick()">
                         <i class="bi bi-house-door"></i>
                         <span *ngIf="!sidebarCollapsed">Trang chủ</span>
                     </a>
                 </li>
                 <li class="nav-item" *ngIf="isAdmin() | async">
-                    <a routerLink="/dashboard/users" routerLinkActive="active" class="nav-link">
+                    <a routerLink="/dashboard/users" routerLinkActive="active" class="nav-link" (click)="onNavClick()">
                         <i class="bi bi-people"></i>
                         <span *ngIf="!sidebarCollapsed">Quản lý người dùng</span>
                     </a>
                 </li>
                 <li class="nav-item" *ngIf="isAdmin() | async">
-                    <a routerLink="/dashboard/activities" routerLinkActive="active" class="nav-link">
+                    <a routerLink="/dashboard/activities" routerLinkActive="active" class="nav-link"
+                        (click)="onNavClick()">
                         <i class="bi bi-calendar-event"></i>
                         <span *ngIf="!sidebarCollapsed">Quản lý hoạt động</span>
                     </a>

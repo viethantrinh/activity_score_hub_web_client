@@ -22,7 +22,7 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-md-4">
+                <div class="col-12 col-md-6 col-lg-4">
                     <label class="form-label">Tìm kiếm</label>
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Tìm theo tên hoặc mô tả..."
@@ -32,7 +32,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-12 col-md-4 col-lg-6">
                     <label class="form-label">Sắp xếp theo</label>
                     <select class="form-select" [(ngModel)]="sortBy" (change)="applyFilters()">
                         <option value="name">Tên hoạt động</option>
@@ -40,7 +40,7 @@
                         <option value="endDate">Ngày kết thúc</option>
                     </select>
                 </div>
-                <div class="col-md-2">
+                <div class="col-12 col-md-2 col-lg-2">
                     <label class="form-label">Thứ tự</label>
                     <select class="form-select" [(ngModel)]="sortDirection" (change)="applyFilters()">
                         <option value="asc">Tăng dần</option>
@@ -75,15 +75,17 @@
                                 Tên hoạt động
                                 <i class="bi ms-1" [class]="getSortIcon('name')"></i>
                             </th>
-                            <th style="cursor: pointer;" (click)="onSortChange('startDate')">
+                            <th style="cursor: pointer;" (click)="onSortChange('startDate')"
+                                class="d-none d-md-table-cell">
                                 Ngày bắt đầu
                                 <i class="bi ms-1" [class]="getSortIcon('startDate')"></i>
                             </th>
-                            <th style="cursor: pointer;" (click)="onSortChange('endDate')">
+                            <th style="cursor: pointer;" (click)="onSortChange('endDate')"
+                                class="d-none d-lg-table-cell">
                                 Ngày kết thúc
                                 <i class="bi ms-1" [class]="getSortIcon('endDate')"></i>
                             </th>
-                            <th>Số vai trò</th>
+                            <th class="d-none d-lg-table-cell">Số vai trò</th>
                             <th class="text-center">Thao tác</th>
                         </tr>
                     </thead>
@@ -93,24 +95,36 @@
                                 <div>
                                     <strong>{{ activity.name }}</strong>
                                     <br>
-                                    <small class="text-muted">{{ activity.description | slice:0:50 }}{{
+                                    <small class="text-muted d-none d-md-inline">{{ activity.description | slice:0:50
+                                        }}{{
                                         activity.description.length > 50 ? '...' : '' }}</small>
+                                    <!-- Mobile view: show dates inline -->
+                                    <div class="d-md-none">
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar-start me-1"></i>{{ formatDate(activity.startDate)
+                                            }}
+                                            <br>
+                                            <i class="bi bi-calendar-end me-1"></i>{{ formatDate(activity.endDate) }}
+                                        </small>
+                                    </div>
                                 </div>
                             </td>
-                            <td>{{ formatDate(activity.startDate) }}</td>
-                            <td>{{ formatDate(activity.endDate) }}</td>
-                            <td>
+                            <td class="d-none d-md-table-cell">{{ formatDate(activity.startDate) }}</td>
+                            <td class="d-none d-lg-table-cell">{{ formatDate(activity.endDate) }}</td>
+                            <td class="d-none d-lg-table-cell">
                                 <span class="badge bg-info">{{ activity.totalRoles }} vai trò</span>
                             </td>
                             <td class="text-center">
                                 <div class="btn-group btn-group-sm" role="group">
-                                    <button class="btn btn-outline-primary" (click)="openEditActivityModal(activity)"
-                                        title="Chỉnh sửa">
+                                    <button class="btn btn-outline-primary btn-sm"
+                                        (click)="openEditActivityModal(activity)" title="Chỉnh sửa">
                                         <i class="bi bi-pencil"></i>
+                                        <span class="d-none d-lg-inline ms-1">Sửa</span>
                                     </button>
-                                    <button class="btn btn-outline-danger" (click)="deleteActivity(activity)"
+                                    <button class="btn btn-outline-danger btn-sm" (click)="deleteActivity(activity)"
                                         title="Xóa">
                                         <i class="bi bi-trash"></i>
+                                        <span class="d-none d-lg-inline ms-1">Xóa</span>
                                     </button>
                                 </div>
                             </td>

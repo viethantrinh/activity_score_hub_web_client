@@ -88,13 +88,13 @@
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>STT</th>
+                            <th class="d-none d-md-table-cell">STT</th>
                             <th>Tên đăng nhập</th>
-                            <th>Họ và tên</th>
-                            <th>Email</th>
-                            <th>Đơn vị</th>
+                            <th class="d-none d-lg-table-cell">Họ và tên</th>
+                            <th class="d-none d-md-table-cell">Email</th>
+                            <th class="d-none d-lg-table-cell">Đơn vị</th>
                             <th>Vai trò</th>
-                            <th>Điện thoại</th>
+                            <th class="d-none d-lg-table-cell">Điện thoại</th>
                             <th class="text-center">Thao tác</th>
                         </tr>
                     </thead>
@@ -116,32 +116,42 @@
                         </tr>
 
                         <tr *ngFor="let user of paginatedUsers; let i = index">
-                            <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+                            <td class="d-none d-md-table-cell">{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
                             <td>
-                                <strong>{{ user.username }}</strong>
+                                <div class="user-info">
+                                    <strong>{{ user.username }}</strong>
+                                    <div class="d-lg-none">
+                                        <small class="text-muted d-block">{{ user.name }}</small>
+                                        <small class="text-muted d-block">{{ user.unit }}</small>
+                                        <small class="text-muted d-block d-md-none">{{ user.email }}</small>
+                                        <small class="text-muted d-block d-lg-none">{{ user.phoneNumber }}</small>
+                                    </div>
+                                </div>
                             </td>
-                            <td>{{ user.name }}</td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">{{ user.name }}</td>
+                            <td class="d-none d-md-table-cell">
                                 <div>{{ user.email }}</div>
                                 <small class="text-muted" *ngIf="user.workEmail !== user.email">
                                     Work: {{ user.workEmail }}
                                 </small>
                             </td>
-                            <td>{{ user.unit }}</td>
+                            <td class="d-none d-lg-table-cell">{{ user.unit }}</td>
                             <td>
                                 <span class="badge" [class]="getRoleBadgeClass(user.systemRoles)">
                                     {{ getRoleDisplayText(user.systemRoles) }}
                                 </span>
                             </td>
-                            <td>{{ user.phoneNumber }}</td>
+                            <td class="d-none d-lg-table-cell">{{ user.phoneNumber }}</td>
                             <td class="text-center">
-                                <div class="btn-group btn-group-sm" role="group">
+                                <div class="btn-group btn-group-sm action-buttons" role="group">
                                     <button class="btn btn-outline-primary" (click)="openEditUserModal(user)"
                                         title="Chỉnh sửa">
                                         <i class="bi bi-pencil"></i>
+                                        <span class="d-none d-sm-inline ms-1">Sửa</span>
                                     </button>
                                     <button class="btn btn-outline-danger" (click)="deleteUser(user)" title="Xóa">
                                         <i class="bi bi-trash"></i>
+                                        <span class="d-none d-sm-inline ms-1">Xóa</span>
                                     </button>
                                 </div>
                             </td>

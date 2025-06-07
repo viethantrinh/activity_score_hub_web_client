@@ -60,6 +60,70 @@ body {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
 }
 
+/* Responsive utility classes */
+.mobile-only {
+    display: none !important;
+}
+
+.desktop-only {
+    display: block !important;
+}
+
+@media (max-width: 768px) {
+    .mobile-only {
+        display: block !important;
+    }
+
+    .desktop-only {
+        display: none !important;
+    }
+
+    .mobile-hidden {
+        display: none !important;
+    }
+
+    .mobile-full-width {
+        width: 100% !important;
+    }
+
+    .mobile-text-center {
+        text-align: center !important;
+    }
+
+    .mobile-no-padding {
+        padding: 0 !important;
+    }
+
+    .mobile-small-padding {
+        padding: 0.5rem !important;
+    }
+}
+
+/* Touch-friendly interactive elements */
+.touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responsive table improvements */
+.table-mobile-responsive {
+    font-size: 0.875rem;
+}
+
+@media (max-width: 576px) {
+    .table-mobile-responsive {
+        font-size: 0.75rem;
+    }
+
+    .table-mobile-responsive th,
+    .table-mobile-responsive td {
+        padding: 0.25rem;
+    }
+}
+
 /* Animation utilities */
 .fade-in {
     animation: fadeIn 0.3s ease-in;
@@ -142,4 +206,111 @@ body {
 .loading-spinner {
     width: 3rem;
     height: 3rem;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    .container-fluid {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    .btn {
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .btn-sm {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .form-control,
+    .form-select {
+        font-size: 16px;
+        /* Prevent zoom on iOS */
+    }
+
+    .table-responsive {
+        border: none;
+    }
+
+    .card {
+        margin-bottom: 1rem;
+        border-radius: 8px;
+    }
+
+    .modal-content {
+        border-radius: 8px;
+    }
+}
+
+@media (max-width: 576px) {
+    body {
+        font-size: 13px;
+    }
+
+    .btn {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.6rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    h3 {
+        font-size: 1.1rem;
+    }
+
+    h4 {
+        font-size: 1rem;
+    }
+
+    h5 {
+        font-size: 0.9rem;
+    }
+
+    h6 {
+        font-size: 0.8rem;
+    }
+
+    .container-fluid {
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+    }
+}
+
+/* Touch-friendly buttons */
+@media (pointer: coarse) {
+    .btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    .btn-sm {
+        min-height: 36px;
+        min-width: 36px;
+    }
+}
+
+/* High DPI optimizations */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+    .table {
+        font-weight: 400;
+    }
+
+    .form-control,
+    .form-select {
+        border-width: 0.5px;
+    }
 }
