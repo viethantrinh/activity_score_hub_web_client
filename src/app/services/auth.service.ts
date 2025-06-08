@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 import {
     ApiResponse,
     AuthResponse,
@@ -17,7 +18,7 @@ import {
     providedIn: 'root'
 })
 export class AuthService {
-    private baseUrl = 'http://localhost:8080/auth';
+    private baseUrl = `${environment.apiUrl}/auth`;
     private tokenKey = 'auth_token';
     private currentUserSubject = new BehaviorSubject<User | null>(null);
     public currentUser$ = this.currentUserSubject.asObservable();

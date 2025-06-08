@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 import { Role } from '../models/role.model';
 import { AuthService } from './auth.service';
 
@@ -30,7 +31,7 @@ export interface UpdateRoleRequest {
     providedIn: 'root'
 })
 export class RoleService {
-    private apiUrl = 'http://localhost:8080/roles';
+    private apiUrl = `${environment.apiUrl}/roles`;
 
     constructor(private http: HttpClient, private authService: AuthService) { }
 

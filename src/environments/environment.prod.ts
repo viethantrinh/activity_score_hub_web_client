@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'http://localhost:8080'
+    apiUrl: 'https://activity-score-hub-backend-b03ddc380264.herokuapp.com'
 };

@@ -14,7 +14,7 @@ import {
     providedIn: 'root'
 })
 export class UserActivityService {
-    private apiUrl = `http://localhost:8080/user-activities`;
+    private apiUrl = `${environment.apiUrl}/user-activities`;
 
     constructor(private http: HttpClient) { }
 

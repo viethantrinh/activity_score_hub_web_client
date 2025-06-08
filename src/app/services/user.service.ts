@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 import { ApiResponse, User } from '../models/user.model';
 import { AuthService } from './auth.service';
 
@@ -9,7 +10,7 @@ import { AuthService } from './auth.service';
     providedIn: 'root'
 })
 export class UserService {
-    private baseUrl = 'http://localhost:8080/users';
+    private baseUrl = `${environment.apiUrl}/users`;
 
     constructor(
         private http: HttpClient,
