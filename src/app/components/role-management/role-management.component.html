@@ -1,0 +1,188 @@
+<div class="role-management">
+    <!-- Page Header -->
+    <div class="page-header mb-4">
+        <div class="row align-items-center">
+            <div class="col">
+                <h2 class="page-title">
+                    <i class="bi bi-person-badge me-2"></i>
+                    Quản lý vai trò
+                </h2>
+                <p class="text-muted mb-0">Quản lý các vai trò trong hệ thống</p>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-primary" (click)="openCreateRoleModal()">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Thêm vai trò
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label class="form-label">Tìm kiếm</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" class="form-control" placeholder="Tìm theo tên vai trò, mô tả..."
+                            [(ngModel)]="searchTerm" (input)="onSearch()">
+                    </div>
+                </div>
+
+                <div class="col-md-4 d-flex align-items-end">
+                    <button class="btn btn-outline-secondary" (click)="clearFilters()">
+                        <i class="bi bi-arrow-clockwise me-1"></i>
+                        Xóa bộ lọc
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Roles Table -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                Danh sách vai trò ({{ filteredRoles.length }})
+            </h5>
+
+            <!-- Loading indicator -->
+            <div *ngIf="loading" class="d-flex align-items-center">
+                <div class="spinner-border spinner-border-sm text-primary me-2" role="status">
+                    <span class="visually-hidden">Đang tải...</span>
+                </div>
+                <span>Đang tải...</span>
+            </div>
+        </div>
+
+        <!-- Error Alert -->
+        <div *ngIf="error" class="alert alert-danger m-3 mb-0" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{ error }}
+            <button type="button" class="btn-close float-end" (click)="error = ''"></button>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="loading && !error" class="card-body text-center py-5">
+            <div class="d-flex flex-column align-items-center">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">Đang tải...</span>
+                </div>
+                <p class="text-muted">Đang tải danh sách vai trò...</p>
+            </div>
+        </div>
+
+        <div class="card-body p-0" *ngIf="!loading">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="d-none d-md-table-cell">STT</th>
+                            <th class="sortable" (click)="onSortChange('name')">
+                                Tên vai trò
+                                <i class="bi ms-1" [class]="getSortIcon('name')"></i>
+                            </th>
+                            <th class="d-none d-lg-table-cell sortable" (click)="onSortChange('description')">
+                                Mô tả
+                                <i class="bi ms-1" [class]="getSortIcon('description')"></i>
+                            </th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngIf="!loading && filteredRoles.length === 0">
+                            <td [attr.colspan]="isMobile ? 3 : 4" class="text-center py-4">
+                                <div class="text-muted">
+                                    <i class="bi bi-inbox display-4 d-block mb-3"></i>
+                                    <span *ngIf="searchTerm">Không tìm thấy vai trò nào phù hợp với từ khóa "{{
+                                        searchTerm }}"</span>
+                                    <span *ngIf="!searchTerm">Chưa có vai trò nào trong hệ thống</span>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr *ngFor="let role of paginatedRoles; let i = index" class="align-middle">
+                            <td class="d-none d-md-table-cell">
+                                {{ (currentPage - 1) * itemsPerPage + i + 1 }}
+                            </td>
+                            <td>
+                                <div class="d-flex flex-column">
+                                    <div class="fw-medium">{{ role.name }}</div>
+                                    <!-- Mobile description -->
+                                    <small class="text-muted d-lg-none" *ngIf="role.description">
+                                        {{ role.description }}
+                                    </small>
+                                </div>
+                            </td>
+                            <td class="d-none d-lg-table-cell">
+                                <span class="text-muted" *ngIf="role.description">{{ role.description }}</span>
+                                <span class="text-muted fst-italic" *ngIf="!role.description">Chưa có mô tả</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm action-buttons" role="group">
+                                    <button class="btn btn-outline-primary" (click)="openEditRoleModal(role)"
+                                        title="Chỉnh sửa">
+                                        <i class="bi bi-pencil"></i>
+                                        <span class="d-none d-sm-inline ms-1">Sửa</span>
+                                    </button>
+                                    <button class="btn btn-outline-danger" (click)="deleteRole(role)" title="Xóa">
+                                        <i class="bi bi-trash"></i>
+                                        <span class="d-none d-sm-inline ms-1">Xóa</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="card-footer" *ngIf="totalPages > 1">
+            <div class="row align-items-center">
+                <div class="col">
+                    <p class="text-muted mb-0">
+                        Hiển thị {{ (currentPage - 1) * itemsPerPage + 1 }} -
+                        {{ Math.min(currentPage * itemsPerPage, filteredRoles.length) }}
+                        trong tổng số {{ filteredRoles.length }} vai trò
+                    </p>
+                </div>
+                <div class="col-auto">
+                    <nav aria-label="Phân trang">
+                        <ul class="pagination pagination-sm mb-0">
+                            <li class="page-item" [class.disabled]="currentPage === 1">
+                                <button class="page-link" (click)="changePage(currentPage - 1)"
+                                    [disabled]="currentPage === 1">
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+                            </li>
+
+                            <li *ngFor="let page of pageNumbers" class="page-item"
+                                [class.active]="currentPage === page">
+                                <button class="page-link" (click)="changePage(page)">
+                                    {{ page }}
+                                </button>
+                            </li>
+
+                            <li class="page-item" [class.disabled]="currentPage === totalPages">
+                                <button class="page-link" (click)="changePage(currentPage + 1)"
+                                    [disabled]="currentPage === totalPages">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Role Modal -->
+<app-role-modal *ngIf="showRoleModal" [role]="selectedRole" [isEditMode]="isEditMode" (roleSaved)="onRoleSaved()"
+    (modalClosed)="closeRoleModal()">
+</app-role-modal>

@@ -33,6 +33,12 @@
                         <span *ngIf="!sidebarCollapsed">Quản lý hoạt động</span>
                     </a>
                 </li>
+                <li class="nav-item" *ngIf="isAdmin() | async">
+                    <a routerLink="/dashboard/roles" routerLinkActive="active" class="nav-link" (click)="onNavClick()">
+                        <i class="bi bi-shield-lock"></i>
+                        <span *ngIf="!sidebarCollapsed">Quản lý vai trò</span>
+                    </a>
+                </li>
                 <!-- Thêm các menu khác ở đây -->
                 <li class="nav-item mt-auto">
                     <a href="#" class="nav-link text-danger" (click)="logout(); $event.preventDefault()">

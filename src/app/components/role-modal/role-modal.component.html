@@ -1,0 +1,92 @@
+<div class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-person-badge me-2"></i>
+                        {{ modalTitle }}
+                    </h5>
+                    <button type="button" class="btn-close" (click)="onCancel()" [disabled]="loading"></button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- Error Alert -->
+                    <div *ngIf="error" class="alert alert-danger" role="alert">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        {{ error }}
+                    </div>
+
+                    <div class="row g-3">
+                        <!-- Role Name -->
+                        <div class="col-12">
+                            <label for="name" class="form-label">
+                                Tên vai trò <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" id="name" class="form-control" formControlName="name"
+                                [class.is-invalid]="isFieldInvalid('name')" placeholder="Nhập tên vai trò"
+                                [disabled]="loading" maxlength="50">
+                            <div *ngIf="isFieldInvalid('name')" class="invalid-feedback">
+                                {{ getFieldError('name') }}
+                            </div>
+                            <div class="form-text">
+                                Tên vai trò phải có từ 2-50 ký tự
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12">
+                            <label for="description" class="form-label">Mô tả</label>
+                            <textarea id="description" class="form-control" formControlName="description"
+                                [class.is-invalid]="isFieldInvalid('description')"
+                                placeholder="Nhập mô tả vai trò (không bắt buộc)" rows="3" [disabled]="loading"
+                                maxlength="255"></textarea>
+                            <div *ngIf="isFieldInvalid('description')" class="invalid-feedback">
+                                {{ getFieldError('description') }}
+                            </div>
+                            <div class="form-text">
+                                Mô tả không được vượt quá 255 ký tự
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Information -->
+                    <div class="mt-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title mb-3">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    Thông tin về vai trò
+                                </h6>
+                                <ul class="mb-0 small text-muted">
+                                    <li>Vai trò được sử dụng để phân quyền trong các hoạt động</li>
+                                    <li>Mỗi vai trò có thể có điểm số khác nhau tùy theo hoạt động</li>
+                                    <li>Vai trò đang được sử dụng trong hoạt động sẽ không thể xóa</li>
+                                    <li class="text-danger">Tên vai trò phải là duy nhất trong hệ thống</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="loading">
+                        <i class="bi bi-x-circle me-2"></i>
+                        Hủy
+                    </button>
+                    <button type="submit" class="btn btn-primary" [disabled]="loading || roleForm.invalid">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status">
+                            <span class="visually-hidden">Đang xử lý...</span>
+                        </span>
+                        <i *ngIf="!loading" class="bi me-2"
+                            [class]="isEditMode ? 'bi-check-circle' : 'bi-plus-circle'"></i>
+                        {{ submitButtonText }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal backdrop -->
+<div class="modal-backdrop fade show"></div>
