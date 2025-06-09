@@ -83,24 +83,24 @@ export class UserManagementComponent implements OnInit {
         if (this.searchTerm) {
             const term = this.searchTerm.toLowerCase();
             filtered = filtered.filter(user =>
-                user.name.toLowerCase().includes(term) ||
-                user.email.toLowerCase().includes(term) ||
-                user.username.toLowerCase().includes(term) ||
-                user.unit.toLowerCase().includes(term)
+                (user.name?.toLowerCase() || '').includes(term) ||
+                (user.email?.toLowerCase() || '').includes(term) ||
+                (user.username?.toLowerCase() || '').includes(term) ||
+                (user.unit?.toLowerCase() || '').includes(term)
             );
         }
 
         // Role filter
         if (this.filterRole) {
             filtered = filtered.filter(user =>
-                user.systemRoles.includes(this.filterRole)
+                user.systemRoles?.includes(this.filterRole) || false
             );
         }
 
         // Unit filter
         if (this.filterUnit) {
             filtered = filtered.filter(user =>
-                user.unit.toLowerCase().includes(this.filterUnit.toLowerCase())
+                (user.unit?.toLowerCase() || '').includes(this.filterUnit.toLowerCase())
             );
         }
 
@@ -185,15 +185,15 @@ export class UserManagementComponent implements OnInit {
         }
     }
 
-    getRoleBadgeClass(roles: string[]): string {
-        if (roles.includes('ADMIN')) {
+    getRoleBadgeClass(roles: string[] | undefined): string {
+        if (roles?.includes('ADMIN')) {
             return 'bg-danger';
         }
         return 'bg-primary';
     }
 
-    getRoleDisplayText(roles: string[]): string {
-        if (roles.includes('ADMIN')) {
+    getRoleDisplayText(roles: string[] | undefined): string {
+        if (roles?.includes('ADMIN')) {
             return 'Quản trị viên';
         }
         return 'Người dùng';

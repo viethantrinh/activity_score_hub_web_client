@@ -1,15 +1,15 @@
 export interface User {
     id?: number;
-    username: string;
-    email: string;
-    workEmail: string;
-    name: string;
-    unit: string;
-    academicRank: string;
-    degree: string;
-    phoneNumber: string;
-    notes: string;
-    systemRoles: string[];
+    username?: string;
+    email?: string;
+    workEmail?: string;
+    name?: string;
+    unit?: string;
+    academicRank?: string;
+    degree?: string;
+    phoneNumber?: string;
+    notes?: string;
+    systemRoles?: string[];
 }
 
 export interface SignInRequest {
