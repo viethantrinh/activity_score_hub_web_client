@@ -145,7 +145,7 @@ export class AuthService {
 
     hasRole(role: string): Observable<boolean> {
         if (this.currentUserSubject.value) {
-            return of(this.currentUserSubject.value.systemRoles.includes(role));
+            return of(this.currentUserSubject.value.systemRoles?.includes(role) || false);
         }
 
         return this.getCurrentUser().pipe(

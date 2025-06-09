@@ -198,7 +198,7 @@ export class UserAssignmentModalComponent implements OnInit {
 
     getUserName(userId: number): string {
         const user = this.availableUsers.find(u => u.id === userId);
-        return user ? user.name : '';
+        return user ? (user.name || '') : '';
     }
 
     getRoleName(roleId: number): string {
